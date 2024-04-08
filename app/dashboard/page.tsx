@@ -1,3 +1,15 @@
-export default function Page() {
-  return <h1>Hello, Dashboard Page!</h1>
+'use client'
+
+import DashboardLayout from '@/src/components/Layouts/Dashboard';
+
+const Dashboard = () => {
+  return (
+    <DashboardLayout>
+      <div>
+        <h1>Dashboard</h1>
+      </div>
+    </DashboardLayout>
+  );
 }
+
+export default Dashboard;
