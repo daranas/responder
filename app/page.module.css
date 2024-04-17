@@ -1,0 +1,12 @@
+.editorWrapper {
+  width: 60%;
+}
+.editorSidebar {
+  width: 40%;
+  background: #fff;
+  border-left: 1px solid #eee;
+  box-shadow: 0 1px 6px 0 rgba(0,0,0,0.12);
+  position: relative;
+  z-index: 999;
+  margin-left: -2px;
+}
