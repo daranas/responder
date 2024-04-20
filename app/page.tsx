@@ -8,10 +8,12 @@ import {
   InputAdornment,
   CircularProgress
 } from '@mui/material';
+import { useQuery } from "@tanstack/react-query";
 import DashboardLayout from '@/src/components/Layouts/Dashboard';
 import Editor from '@monaco-editor/react';
 import SelectProject from '@/src/components/CustomSelect/SelectProject';
 import SelectFeature from '@/src/components/CustomSelect/SelectFeature';
+import axios from '@/src/utils/axios';
 import styles from './page.module.css';
 
 interface IFormData {
@@ -21,10 +23,25 @@ interface IFormData {
   json: string;
 }
 
+const baseApi = process.env.NEXT_PUBLIC_API_URL;
+
+const api = {
+  fetchProjects: `${baseApi}/projects`,
+};
+
+export const fetchProjects = async (id: any) => {
+  const { data } = await axios.get(`${api.fetchProjects}`);
+  return data;
+}
+
 const Home = () => {
 
   const [loading, setLoading] = React.useState<boolean>(false);
   const [data, setData] = React.useState<IFormData | null>(null);
+
+  const {
+    data: listProject,
+  } = useQuery(['project'], () => fetchProjects());
 
   const changeOptions = (key, field) => {
     setData({...data, [key]: field});
@@ -38,6 +55,29 @@ const Home = () => {
     if(!str) return;
 
     return str?.toLowerCase().replace(/[^A-Z0-9]+/ig, "-") + "/";
+  }
+
+  const onSubmitProject = () => {
+    try {
+      const formData: any = new FormData();
+      formData.append('id', id);
+      formData.append("file", file);
+
+      await axios
+        .post(api.fetchProjects, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const onSubmit = () => {

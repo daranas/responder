@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+import { ReactQueryClientProvider } from "@/src/utils/queryProvider";
+import { useState } from 'react'
 import theme from "@/src/theme";
 import "./globals.css";
 
@@ -14,6 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <ReactQueryClientProvider>
     <html lang="en">
       <body>
         <AppRouterCacheProvider theme={theme}>
@@ -21,5 +24,6 @@ export default function RootLayout({
         </AppRouterCacheProvider>
       </body>
     </html>
+    </ReactQueryClientProvider>
   );
 }
