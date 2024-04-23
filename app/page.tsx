@@ -57,7 +57,7 @@ const Home = () => {
     return str?.toLowerCase().replace(/[^A-Z0-9]+/ig, "-") + "/";
   }
 
-  const onSubmitProject = () => {
+  const onSubmitProject = async () => {
     try {
       const formData: any = new FormData();
       formData.append('id', id);
@@ -114,7 +114,7 @@ const Home = () => {
           className={styles.editorSidebar}
         >
           <Box>
-            <SelectProject handleOptions={changeOptions} />
+            <SelectProject data={listProject} handleOptions={changeOptions} />
           </Box>
           <Box>
             <SelectFeature handleOptions={changeOptions} />

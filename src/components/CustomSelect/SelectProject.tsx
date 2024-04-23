@@ -4,12 +4,12 @@ import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 
 interface IProjectOption {
   inputValue?: string;
-  title: string;
+  name: string;
 }
 
 const filter = createFilterOptions<IProjectOption>();
 
-const SelectProject = ({ handleOptions }) => {
+const SelectProject = ({ data, handleOptions }) => {
   const [value, setValue] = React.useState<IProjectOption | null>(null);
 
   return (
@@ -18,9 +18,9 @@ const SelectProject = ({ handleOptions }) => {
       onChange={(event, newValue) => {
         if (newValue && newValue.inputValue) {
           setValue({
-            title: newValue.inputValue,
+            name: newValue.inputValue,
           });
-          newValue.title = newValue.inputValue;
+          newValue.name = newValue.inputValue;
         } else {
           setValue(newValue);
         }
@@ -31,11 +31,11 @@ const SelectProject = ({ handleOptions }) => {
         const filtered = filter(options, params);
 
         const { inputValue } = params;
-        const isExisting = options.some((option) => inputValue === option.title);
+        const isExisting = options.some((option) => inputValue === option.name);
         if (inputValue !== '' && !isExisting) {
           filtered.push({
             inputValue,
-            title: `Add "${inputValue}"`,
+            name: `Add "${inputValue}"`,
           });
         }
 
@@ -45,7 +45,7 @@ const SelectProject = ({ handleOptions }) => {
       clearOnBlur
       handleHomeEndKeys
       id="free-solo-with-text-demo"
-      options={top100Films}
+      options={data}
       getOptionLabel={(option) => {
         if (typeof option === 'string') {
           return option;
@@ -53,9 +53,9 @@ const SelectProject = ({ handleOptions }) => {
         if (option.inputValue) {
           return option.inputValue;
         }
-        return option.title;
+        return option.name;
       }}
-      renderOption={(props, option) => <li {...props} key={props.key}>{option.title}</li>}
+      renderOption={(props, option) => <li {...props} key={props.key}>{option.name}</li>}
       freeSolo
       renderInput={(params) => (
         <TextField {...params} label="Select Project" />
