@@ -24,13 +24,18 @@ interface IFormData {
 }
 
 const baseApi = process.env.NEXT_PUBLIC_API_URL;
-
 const api = {
   fetchProjects: `${baseApi}/projects`,
+  fetchFeatures: `${baseApi}/features`,
 };
 
 export const fetchProjects = async (id: any) => {
   const { data } = await axios.get(`${api.fetchProjects}`);
+  return data;
+}
+
+export const fetchFeatures = async (id: any) => {
+  const { data } = await axios.get(`${api.fetchFeatures}`);
   return data;
 }
 
@@ -42,6 +47,10 @@ const Home = () => {
   const {
     data: listProject,
   } = useQuery(['project'], () => fetchProjects());
+
+  const {
+    data: listFeature,
+  } = useQuery(['feature'], () => fetchFeatures());
 
   const changeOptions = (key, field) => {
     setData({...data, [key]: field});
@@ -86,7 +95,7 @@ const Home = () => {
       setLoading(false);
     }, 3000);
 
-    console.log(data);
+    console.log(data, listProject);
   }
 
   return (
@@ -117,7 +126,7 @@ const Home = () => {
             <SelectProject data={listProject} handleOptions={changeOptions} />
           </Box>
           <Box>
-            <SelectFeature handleOptions={changeOptions} />
+            <SelectFeature data={listFeature} handleOptions={changeOptions} />
           </Box>
           <Box>
             <TextField
@@ -127,8 +136,8 @@ const Home = () => {
               InputProps={{
                 startAdornment: 
                   <InputAdornment position="start">/
-                    {pathFormat(data?.project?.title)}
-                    {pathFormat(data?.feature?.title)}
+                    {pathFormat(data?.project?.name)}
+                    {pathFormat(data?.feature?.name)}
                   </InputAdornment>,
               }}
               onChange={(e) => {

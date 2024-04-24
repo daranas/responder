@@ -1,16 +1,42 @@
 import * as React from 'react';
+import axios from '@/src/utils/axios';
 import TextField from '@mui/material/TextField';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface IProjectOption {
   inputValue?: string;
   name: string;
 }
 
+const baseApi = process.env.NEXT_PUBLIC_API_URL;
+const api = {
+  postProjects: `${baseApi}/projects`,
+};
+
 const filter = createFilterOptions<IProjectOption>();
 
 const SelectProject = ({ data, handleOptions }) => {
   const [value, setValue] = React.useState<IProjectOption | null>(null);
+
+  const queryClient = useQueryClient();
+
+  const addProject = async (val) => {
+    try {
+      const payload = {
+        name: val
+      }
+      await axios
+        .post(api.postProjects, payload)
+        .then((res) => {
+          if (res.data.status === 200) {
+            queryClient.invalidateQueries(['project']);
+          }
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <Autocomplete
@@ -21,10 +47,10 @@ const SelectProject = ({ data, handleOptions }) => {
             name: newValue.inputValue,
           });
           newValue.name = newValue.inputValue;
+          addProject(newValue.inputValue);
         } else {
           setValue(newValue);
-        }
-
+        }     
         handleOptions('project', newValue);
       }}
       filterOptions={(options, params) => {
@@ -44,7 +70,7 @@ const SelectProject = ({ data, handleOptions }) => {
       selectOnFocus
       clearOnBlur
       handleHomeEndKeys
-      id="free-solo-with-text-demo"
+      id="free-solo-project"
       options={data}
       getOptionLabel={(option) => {
         if (typeof option === 'string') {
@@ -68,9 +94,3 @@ const SelectProject = ({ data, handleOptions }) => {
 }
 
 export default SelectProject;
-
-const top100Films: readonly IProjectOption[] = [
-  { id: 1, title: 'The Shawshank Redemption' },
-  { id: 2, title: 'The Godfather' },
-  { id: 3, title: 'The Godfather: Part II' },
-];
