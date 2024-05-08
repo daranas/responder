@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import { ReactQueryClientProvider } from "@/src/utils/queryProvider";
-import { useState } from 'react'
 import theme from "@/src/theme";
 import "./globals.css";
 

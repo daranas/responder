@@ -20,7 +20,7 @@ interface IFormData {
   project?: string;
   feature?: string;
   path?: string;
-  json: string;
+  json?: string;
 }
 
 const baseApi = process.env.NEXT_PUBLIC_API_URL;
@@ -29,12 +29,12 @@ const api = {
   fetchFeatures: `${baseApi}/features`,
 };
 
-export const fetchProjects = async (id: any) => {
+export const fetchProjects = async () => {
   const { data } = await axios.get(`${api.fetchProjects}`);
   return data;
 }
 
-export const fetchFeatures = async (id: any) => {
+export const fetchFeatures = async () => {
   const { data } = await axios.get(`${api.fetchFeatures}`);
   return data;
 }
@@ -63,39 +63,30 @@ const Home = () => {
   const pathFormat = (str) => {
     if(!str) return;
 
+    str = str.name;
     return str?.toLowerCase().replace(/[^A-Z0-9]+/ig, "-") + "/";
   }
 
-  const onSubmitProject = async () => {
-    try {
-      const formData: any = new FormData();
-      formData.append('id', id);
-      formData.append("file", file);
-
-      await axios
-        .post(api.fetchProjects, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  const onSubmit = () => {
+  const onSubmit = async () => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
     }, 3000);
 
     console.log(data, listProject);
+
+    // await axios
+    //   .post(api.fetchProjects, formData, {
+    //     headers: {
+    //       'Content-Type': 'multipart/form-data'
+    //     }
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((e) => {
+    //     console.log(e);
+    //   });
   }
 
   return (
@@ -106,10 +97,8 @@ const Home = () => {
             height={`calc(100vh - 64px)`}
             language="json"
             options={{
-              inlineSuggest: true,
-              fontSize: "16px",
+              fontSize: 16,
               formatOnType: true,
-              autoClosingBrackets: true,
               minimap: {
                 enabled: false,
               },
@@ -136,8 +125,8 @@ const Home = () => {
               InputProps={{
                 startAdornment: 
                   <InputAdornment position="start">/
-                    {pathFormat(data?.project?.name)}
-                    {pathFormat(data?.feature?.name)}
+                    {pathFormat(data?.project)}
+                    {pathFormat(data?.feature)}
                   </InputAdornment>,
               }}
               onChange={(e) => {
