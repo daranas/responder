@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import { ReactQueryClientProvider } from "@/src/utils/queryProvider";
-import theme from "@/src/theme";
+import { StyledRoot } from "@/src/StyledRoot";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -18,8 +18,10 @@ export default function RootLayout({
     <ReactQueryClientProvider>
     <html lang="en">
       <body>
-        <AppRouterCacheProvider theme={theme}>
-          {children}
+        <AppRouterCacheProvider>
+          <StyledRoot>
+            {children}
+          </StyledRoot>
         </AppRouterCacheProvider>
       </body>
     </html>
